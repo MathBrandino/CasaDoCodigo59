@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -24,36 +25,58 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1" />
 
-            <LinearLayout
+            <android.support.design.widget.CoordinatorLayout
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_margin="7dp"
-                android:layout_weight="3"
-                android:orientation="vertical">
+                android:layout_weight="3">
 
-                <TextView
-                    android:id="@+id/nome_livro_detalhes"
+
+                <LinearLayout
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="7dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/nome_livro_detalhes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="NOME DO LIVRO VIRÁ NESSA PARTE AQUI "
+                        android:textColor="@color/colorAccent"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/autores_livro_detalhes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Nome dos autores ficarão aqui"
+                        android:textSize="13sp"
+                        android:textStyle="italic" />
+
+
+                </LinearLayout>
+
+
+                <Button
+                    android:id="@+id/btn_comprar_detalhe"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="NOME DO LIVRO VIRÁ NESSA PARTE AQUI "
-                    android:textColor="@color/colorAccent"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:layout_gravity="center|bottom"
+                    android:text="Comprar"
+                    android:textColor="#FFF"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/colorAccent"
+                    app:elevation="10dp"
 
+                    />
 
-                <TextView
-                    android:id="@+id/autores_livro_detalhes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Nome dos autores ficarão aqui"
-                    android:textSize="10sp"
-                    android:textStyle="italic" />
-
-
-            </LinearLayout>
+            </android.support.design.widget.CoordinatorLayout>
 
         </LinearLayout>
 

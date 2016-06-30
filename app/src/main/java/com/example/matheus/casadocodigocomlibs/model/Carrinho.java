@@ -12,6 +12,7 @@ public class Carrinho implements Serializable {
     private List<Item> items;
 
 
+
     public Carrinho() {
         items = new ArrayList<>();
     }
@@ -20,8 +21,8 @@ public class Carrinho implements Serializable {
         items.add(item);
     }
 
-    public void remove(int position) {
-        items.remove(position);
+    public void remove(Item item) {
+        items.remove(item);
     }
 
     public void limpaLista(List<Item> items) {

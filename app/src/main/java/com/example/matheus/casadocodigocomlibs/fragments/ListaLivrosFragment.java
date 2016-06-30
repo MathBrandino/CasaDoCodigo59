@@ -14,12 +14,13 @@ import com.example.matheus.casadocodigocomlibs.adapter.ListaLivrosAdapter;
 import com.example.matheus.casadocodigocomlibs.delegate.LivroDelegate;
 import com.example.matheus.casadocodigocomlibs.event.ListaEvent;
 import com.example.matheus.casadocodigocomlibs.model.Livro;
+import com.example.matheus.casadocodigocomlibs.server.WebClient;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,27 +28,43 @@ import butterknife.ButterKnife;
 /**
  * Created by matheus on 29/06/16.
  */
-public class ListaLivrosFragment extends Fragment {
+public class ListaLivrosFragment extends Fragment implements Serializable {
+
 
     @BindView(R.id.lista_livros)
     RecyclerView listaLivros;
-    private List<Livro> livros = new ArrayList<>();
 
-    @Nullable
+    private ArrayList<Livro> livros = new ArrayList<>();
+
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.lista_livros_fragment, container, false);
         ButterKnife.bind(this, view);
+
+        if (savedInstanceState != null) {
+            livros = (ArrayList<Livro>) savedInstanceState.getSerializable("livros");
+        } else {
+            new WebClient().retornaLivroDoServidor();
+
+        }
+
 
         return view;
     }
 
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("livros", livros);
+    }
+
     @Subscribe
     public void recebeLista(ListaEvent event) {
 
-        this.livros = event.livros;
+        this.livros = (ArrayList<Livro>) event.livros;
 
         carregaLista();
     }
@@ -66,8 +83,8 @@ public class ListaLivrosFragment extends Fragment {
         // se não setar a listagem fica bugada, ainda não corrigiram isto
         listaLivros.setAdapter(null);
 
-        listaLivros.setAdapter(new ListaLivrosAdapter(livros, (LivroDelegate) getActivity()));
         listaLivros.setLayoutManager(new LinearLayoutManager(getContext()));
+        listaLivros.setAdapter(new ListaLivrosAdapter(livros, (LivroDelegate) getActivity()));
     }
 
     @Override
