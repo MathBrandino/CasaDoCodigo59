@@ -8,14 +8,16 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by matheus on 29/06/16.
  */
 public interface ListaLivrosService {
 
-    @GET("listarLivros?indicePrimeiroLivro=0&qtdLivros=20")
-    Call<List<Livro>> listaLivros();
+    @GET("listarLivros")
+    Call<List<Livro>> listaLivros(@Query("indicePrimeiroLivro") int indice, @Query("qtdLivros") int qtd);
 
 
     @POST("registrarCompra")

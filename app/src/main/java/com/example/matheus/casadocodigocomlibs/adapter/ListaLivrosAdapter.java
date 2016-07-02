@@ -9,9 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.matheus.casadocodigocomlibs.R;
-import com.example.matheus.casadocodigocomlibs.delegate.LivroDelegate;
+import com.example.matheus.casadocodigocomlibs.event.LivroEvent;
 import com.example.matheus.casadocodigocomlibs.model.Livro;
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -25,20 +27,18 @@ import butterknife.OnClick;
 public class ListaLivrosAdapter extends RecyclerView.Adapter {
 
     private List<Livro> livros;
-    private LivroDelegate delegate;
 
-    public ListaLivrosAdapter(List<Livro> livros, LivroDelegate delegate) {
+    public ListaLivrosAdapter(List<Livro> livros) {
         this.livros = livros;
-        this.delegate = delegate;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
         if (viewType % 2 == 0)
-            view = LayoutInflater.from(delegate.getContext()).inflate(R.layout.item_livro_par, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_livro_par, parent, false);
         else
-            view = LayoutInflater.from(delegate.getContext()).inflate(R.layout.item_livro_impar, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_livro_impar, parent, false);
 
         return new ViewHolder(view);
     }
@@ -58,7 +58,7 @@ public class ListaLivrosAdapter extends RecyclerView.Adapter {
 
         holder.nomeLivro.setText(livro.getNome());
 
-        Picasso.with(delegate.getContext()).load(livro.getImagemUrl()).placeholder(R.drawable.livro).fit().into(holder.fotoLivro);
+        Picasso.with(holder.fotoLivro.getContext()).load(livro.getImagemUrl()).placeholder(R.drawable.livro).fit().into(holder.fotoLivro);
 
     }
 
@@ -85,7 +85,8 @@ public class ListaLivrosAdapter extends RecyclerView.Adapter {
 
         @OnClick(R.id.item)
         public void clickItem() {
-            delegate.lidaComClick(livros.get(getAdapterPosition()));
+            EventBus.getDefault().post(new LivroEvent(livros.get(getAdapterPosition())));
+
         }
     }
 }

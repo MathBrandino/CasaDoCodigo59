@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.matheus.casadocodigocomlibs.R;
 import com.example.matheus.casadocodigocomlibs.application.CasaDoCodigoApplication;
+import com.example.matheus.casadocodigocomlibs.infra.Infra;
 import com.example.matheus.casadocodigocomlibs.model.Autor;
 import com.example.matheus.casadocodigocomlibs.model.Item;
 import com.example.matheus.casadocodigocomlibs.model.Livro;
@@ -72,6 +74,13 @@ public class DetalheLivroFragment extends Fragment {
 
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Infra.colocaBotaoVoltar((AppCompatActivity) getActivity());
+    }
+
 
     private void populaCamposCom(Livro livro) {
         nome.setText(livro.getNome());

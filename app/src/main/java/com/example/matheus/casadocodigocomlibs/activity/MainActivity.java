@@ -1,6 +1,5 @@
 package com.example.matheus.casadocodigocomlibs.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,14 +9,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.matheus.casadocodigocomlibs.R;
-import com.example.matheus.casadocodigocomlibs.delegate.LivroDelegate;
+import com.example.matheus.casadocodigocomlibs.event.LivroEvent;
 import com.example.matheus.casadocodigocomlibs.fragments.DetalheLivroFragment;
 import com.example.matheus.casadocodigocomlibs.fragments.ListaLivrosFragment;
 import com.example.matheus.casadocodigocomlibs.model.Livro;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements LivroDelegate {
+public class MainActivity extends AppCompatActivity {
 
 
     @Override
@@ -32,25 +34,17 @@ public class MainActivity extends AppCompatActivity implements LivroDelegate {
 
             transaction.replace(R.id.main_frame, new ListaLivrosFragment());
             transaction.commit();
+
         }
-
     }
 
 
-    @Override
-    public Context getContext() {
-        return this;
-    }
-
-    @Override
-    public void lidaComClick(Livro livro) {
-
-
-        // pode ser o caso de colocarmos uma tela com mais de um fragment
+    @Subscribe
+    public void lidaComClick(LivroEvent event) {
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        DetalheLivroFragment detalheLivroFragment = criaDetalheCom(livro);
+        DetalheLivroFragment detalheLivroFragment = criaDetalheCom(event.livro);
 
         transaction.replace(R.id.main_frame, detalheLivroFragment);
         transaction.addToBackStack(null);
@@ -89,8 +83,25 @@ public class MainActivity extends AppCompatActivity implements LivroDelegate {
             startActivity(vaiParaCarrinho);
         }
 
+
+        if (android.R.id.home == item.getItemId()) {
+            onBackPressed();
+        }
+
         return true;
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        EventBus.getDefault().unregister(this);
+    }
 }

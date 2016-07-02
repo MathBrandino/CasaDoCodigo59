@@ -25,7 +25,7 @@ public class WebClient {
 
     public static final String SERVER = "http://cdcmob.herokuapp.com/";
 
-    public void retornaLivroDoServidor() {
+    public void retornaLivroDoServidor(int indice, int qtd) {
 
         Retrofit client = new Retrofit.Builder()
                 .baseUrl(SERVER)
@@ -34,7 +34,7 @@ public class WebClient {
 
         ListaLivrosService service = client.create(ListaLivrosService.class);
 
-        Call<List<Livro>> call = service.listaLivros();
+        Call<List<Livro>> call = service.listaLivros(indice, qtd);
 
         call.enqueue(new Callback<List<Livro>>() {
             @Override
@@ -48,6 +48,8 @@ public class WebClient {
             @Override
             public void onFailure(Call<List<Livro>> call, Throwable t) {
                 Log.d("Livros", "Deu ruim");
+
+                EventBus.getDefault().post(t);
 
             }
         });
