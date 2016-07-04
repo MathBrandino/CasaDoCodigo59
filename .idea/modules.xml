@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/CasaDoCodigo59.iml" filepath="$PROJECT_DIR$/CasaDoCodigo59.iml" />
       <module fileurl="file://$PROJECT_DIR$/CasaDoCodigoComLibs.iml" filepath="$PROJECT_DIR$/CasaDoCodigoComLibs.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
