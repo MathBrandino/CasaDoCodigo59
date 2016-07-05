@@ -17,6 +17,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.matheus.casadocodigocomlibs.R;
+import com.example.matheus.casadocodigocomlibs.event.AutorEvent;
 import com.example.matheus.casadocodigocomlibs.infra.Infra;
 import com.example.matheus.casadocodigocomlibs.model.Autor;
 import com.example.matheus.casadocodigocomlibs.model.Carrinho;
@@ -24,6 +25,10 @@ import com.example.matheus.casadocodigocomlibs.model.Item;
 import com.example.matheus.casadocodigocomlibs.model.Livro;
 import com.example.matheus.casadocodigocomlibs.model.TipoDeCompra;
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -88,6 +93,7 @@ public class DetalheLivroFragment extends Fragment {
     }
 
 
+
     private void populaCamposCom(Livro livro) {
         nome.setText(livro.getNome());
         descricao.setText(livro.getDescricao());
@@ -103,6 +109,13 @@ public class DetalheLivroFragment extends Fragment {
         dataPublicacao.setText(livro.getDataPublicacao());
 
         Picasso.with(getContext()).load(livro.getImagemUrl()).placeholder(R.drawable.livro).fit().into(imagem);
+    }
+
+
+    @OnClick(R.id.autores_livro_detalhes)
+    public void clickAutores() {
+
+        EventBus.getDefault().post(new AutorEvent((ArrayList<Autor>) livro.getAutores()));
     }
 
 

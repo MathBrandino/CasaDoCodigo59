@@ -10,14 +10,19 @@ import android.view.MenuItem;
 
 import com.example.matheus.casadocodigocomlibs.R;
 import com.example.matheus.casadocodigocomlibs.application.CasaDoCodigoApplication;
+import com.example.matheus.casadocodigocomlibs.event.AutorEvent;
 import com.example.matheus.casadocodigocomlibs.event.LivroEvent;
+import com.example.matheus.casadocodigocomlibs.fragments.AutorDetalheFragment;
 import com.example.matheus.casadocodigocomlibs.fragments.DetalheLivroFragment;
 import com.example.matheus.casadocodigocomlibs.fragments.ListaLivrosFragment;
+import com.example.matheus.casadocodigocomlibs.model.Autor;
 import com.example.matheus.casadocodigocomlibs.model.Livro;
 import com.example.matheus.casadocodigocomlibs.module.CasaDoCodigoComponent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 
@@ -40,6 +45,32 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    @Subscribe
+    public void lidaComClick(AutorEvent event) {
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+
+        AutorDetalheFragment autoresDetalhes = criaDetalheCom(event.autores);
+        transaction.replace(R.id.main_frame, autoresDetalhes);
+        transaction.addToBackStack(null);
+
+        transaction.commit();
+
+    }
+
+    private AutorDetalheFragment criaDetalheCom(ArrayList<Autor> autores) {
+
+        AutorDetalheFragment detalheFragment = new AutorDetalheFragment();
+
+        Bundle arguments = new Bundle();
+        arguments.putSerializable("autores", autores);
+
+        detalheFragment.setArguments(arguments);
+
+        return detalheFragment;
+    }
 
     @Subscribe
     public void lidaComClick(LivroEvent event) {
