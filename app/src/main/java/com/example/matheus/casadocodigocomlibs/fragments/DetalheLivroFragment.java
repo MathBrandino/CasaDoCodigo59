@@ -17,13 +17,15 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.matheus.casadocodigocomlibs.R;
-import com.example.matheus.casadocodigocomlibs.application.CasaDoCodigoApplication;
 import com.example.matheus.casadocodigocomlibs.infra.Infra;
 import com.example.matheus.casadocodigocomlibs.model.Autor;
+import com.example.matheus.casadocodigocomlibs.model.Carrinho;
 import com.example.matheus.casadocodigocomlibs.model.Item;
 import com.example.matheus.casadocodigocomlibs.model.Livro;
 import com.example.matheus.casadocodigocomlibs.model.TipoDeCompra;
 import com.squareup.picasso.Picasso;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,6 +59,12 @@ public class DetalheLivroFragment extends Fragment {
     TextView dataPublicacao;
     private Livro livro;
 
+    private Carrinho carrinho;
+
+    @Inject
+    void setCarrinho(Carrinho carrinho) {
+        this.carrinho = carrinho;
+    }
 
     @Nullable
     @Override
@@ -65,12 +73,10 @@ public class DetalheLivroFragment extends Fragment {
         View view = inflater.inflate(R.layout.detalhe_livro_fragment, container, false);
         ButterKnife.bind(this, view);
 
-
         Bundle arguments = getArguments();
         livro = (Livro) arguments.getSerializable(LIVRO);
 
         populaCamposCom(livro);
-
 
         return view;
     }
@@ -115,17 +121,13 @@ public class DetalheLivroFragment extends Fragment {
 
                         final Item item = new Item(livro, retornaTipoDeCompra(opcoes));
 
-                        final CasaDoCodigoApplication application = (CasaDoCodigoApplication) getActivity().getApplication();
-
-                        application.adicionaNaLista(item);
-
+                        carrinho.adicionar(item);
 
                         Snackbar.make(getView(), "Adicionado ao carrinho", Snackbar.LENGTH_SHORT)
                                 .setAction("Cancelar", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-
-                                        application.removeDaLista(item);
+                                        carrinho.remove(item);
                                     }
                                 })
                                 .show();

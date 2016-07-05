@@ -18,11 +18,15 @@ import com.example.matheus.casadocodigocomlibs.adapter.ItensAdapter;
 import com.example.matheus.casadocodigocomlibs.application.CasaDoCodigoApplication;
 import com.example.matheus.casadocodigocomlibs.converter.LivroConverter;
 import com.example.matheus.casadocodigocomlibs.event.RespostaEvent;
+import com.example.matheus.casadocodigocomlibs.model.Carrinho;
 import com.example.matheus.casadocodigocomlibs.model.Item;
+import com.example.matheus.casadocodigocomlibs.module.CasaDoCodigoComponent;
 import com.example.matheus.casadocodigocomlibs.server.WebClient;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,9 +44,18 @@ public class CarrinhoActivity extends AppCompatActivity {
     @BindView(R.id.valor_carrinho)
     TextView valorTotal;
 
+    private Carrinho carrinho;
+    private WebClient webClient;
 
-    private CasaDoCodigoApplication application;
+    @Inject
+    void setCarrinho(Carrinho carrinho) {
+        this.carrinho = carrinho;
+    }
 
+    @Inject
+    public void setWebClient(WebClient webClient) {
+        this.webClient = webClient;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,11 +65,10 @@ public class CarrinhoActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        application = (CasaDoCodigoApplication) getApplication();
-
-
+        CasaDoCodigoApplication application = (CasaDoCodigoApplication) getApplication();
+        CasaDoCodigoComponent component = application.getComponent();
+        component.inject(this);
     }
-
 
     @Override
     protected void onStart() {
@@ -77,26 +89,22 @@ public class CarrinhoActivity extends AppCompatActivity {
     }
 
     public void carregaLista() {
-
-        listaItens.setAdapter(new ItensAdapter(application.itensComprados(), this));
+        listaItens.setAdapter(new ItensAdapter(carrinho.pegaListaItens(), this));
         listaItens.setLayoutManager(new LinearLayoutManager(this));
 
         carregaValorTotal();
-
     }
 
     private void carregaValorTotal() {
-
         double total = 0;
 
-        for (Item item : application.itensComprados()) {
+        for (Item item : carrinho.pegaListaItens()) {
             total += devolveValorDo(item);
         }
         valorTotal.setText("R$ " + total);
     }
 
     private double devolveValorDo(Item item) {
-
         switch (item.getTipoDeCompra()) {
             case FISICO:
                 return item.getLivro().getValorFisico();
@@ -108,13 +116,10 @@ public class CarrinhoActivity extends AppCompatActivity {
                 return item.getLivro().getValorDoisJuntos();
 
         }
-
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         if (item.getItemId() == android.R.id.home) {
             finish();
         }
@@ -124,8 +129,6 @@ public class CarrinhoActivity extends AppCompatActivity {
 
     @OnClick(R.id.fab_carrinho)
     public void clickFAB() {
-
-
         final TextInputLayout layout = new TextInputLayout(this);
         final EditText editText = new EditText(this);
         editText.setHint("Email");
@@ -134,29 +137,21 @@ public class CarrinhoActivity extends AppCompatActivity {
         new AlertDialog.Builder(this).setView(layout).setPositiveButton("Pronto", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                String json = new LivroConverter().toJson(application.itensComprados(), editText.getText().toString());
-                new WebClient().enviaItensParaServidor(json);
-
-
+                String json = new LivroConverter().toJson(carrinho.pegaListaItens(), editText.getText().toString());
+                webClient.enviaItensParaServidor(json);
             }
         }).show();
-
-
     }
-
 
     @Subscribe
     public void recebeRespostaDoServer(RespostaEvent event) {
-
         String body = event.body;
 
         Toast.makeText(this, body, Toast.LENGTH_LONG)
                 .show();
 
-        application.limpaLista();
+        carrinho.limpaLista(carrinho.pegaListaItens());
         carregaLista();
     }
-
 
 }

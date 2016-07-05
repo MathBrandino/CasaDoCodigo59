@@ -2,33 +2,28 @@ package com.example.matheus.casadocodigocomlibs.application;
 
 import android.app.Application;
 
-import com.example.matheus.casadocodigocomlibs.model.Carrinho;
-import com.example.matheus.casadocodigocomlibs.model.Item;
-
-import java.util.List;
+import com.example.matheus.casadocodigocomlibs.module.CasaDoCodigoComponent;
+import com.example.matheus.casadocodigocomlibs.module.CasaDoCodigoModule;
+import com.example.matheus.casadocodigocomlibs.module.DaggerCasaDoCodigoComponent;
 
 /**
  * Created by matheus on 30/06/16.
  */
 public class CasaDoCodigoApplication extends Application {
 
+    private CasaDoCodigoComponent component;
 
-    private Carrinho carrinho = new Carrinho();
+    @Override
+    public void onCreate() {
+        super.onCreate();
 
-
-    public void adicionaNaLista(Item item) {
-        carrinho.adicionar(item);
+        component = DaggerCasaDoCodigoComponent
+                        .builder()
+                        .casaDoCodigoModule(new CasaDoCodigoModule())
+                        .build();
     }
 
-    public void removeDaLista(Item item) {
-        carrinho.remove(item);
-    }
-
-    public List<Item> itensComprados() {
-        return carrinho.pegaListaItens();
-    }
-
-    public void limpaLista() {
-        carrinho.limpaLista(itensComprados());
+    public CasaDoCodigoComponent getComponent() {
+        return component;
     }
 }

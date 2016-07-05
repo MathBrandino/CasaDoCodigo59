@@ -9,10 +9,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.matheus.casadocodigocomlibs.R;
+import com.example.matheus.casadocodigocomlibs.application.CasaDoCodigoApplication;
 import com.example.matheus.casadocodigocomlibs.event.LivroEvent;
 import com.example.matheus.casadocodigocomlibs.fragments.DetalheLivroFragment;
 import com.example.matheus.casadocodigocomlibs.fragments.ListaLivrosFragment;
 import com.example.matheus.casadocodigocomlibs.model.Livro;
+import com.example.matheus.casadocodigocomlibs.module.CasaDoCodigoComponent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -45,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         DetalheLivroFragment detalheLivroFragment = criaDetalheCom(event.livro);
+        CasaDoCodigoApplication app = (CasaDoCodigoApplication) getApplication();
+        CasaDoCodigoComponent component = app.getComponent();
+        component.inject(detalheLivroFragment);
 
         transaction.replace(R.id.main_frame, detalheLivroFragment);
         transaction.addToBackStack(null);
