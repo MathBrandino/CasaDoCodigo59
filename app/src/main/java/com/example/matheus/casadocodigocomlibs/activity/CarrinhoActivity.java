@@ -45,10 +45,16 @@ public class CarrinhoActivity extends AppCompatActivity {
     TextView valorTotal;
 
     private Carrinho carrinho;
+    private WebClient webClient;
 
     @Inject
     void setCarrinho(Carrinho carrinho) {
         this.carrinho = carrinho;
+    }
+
+    @Inject
+    public void setWebClient(WebClient webClient) {
+        this.webClient = webClient;
     }
 
     @Override
@@ -131,11 +137,8 @@ public class CarrinhoActivity extends AppCompatActivity {
         new AlertDialog.Builder(this).setView(layout).setPositiveButton("Pronto", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
                 String json = new LivroConverter().toJson(carrinho.pegaListaItens(), editText.getText().toString());
-                new WebClient().enviaItensParaServidor(json);
-
-
+                webClient.enviaItensParaServidor(json);
             }
         }).show();
     }

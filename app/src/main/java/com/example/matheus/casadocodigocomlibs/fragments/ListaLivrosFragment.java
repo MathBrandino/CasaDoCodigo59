@@ -15,10 +15,12 @@ import android.widget.Toast;
 
 import com.example.matheus.casadocodigocomlibs.R;
 import com.example.matheus.casadocodigocomlibs.adapter.ListaLivrosAdapter;
+import com.example.matheus.casadocodigocomlibs.application.CasaDoCodigoApplication;
 import com.example.matheus.casadocodigocomlibs.endlesslist.EndlessList;
 import com.example.matheus.casadocodigocomlibs.event.ListaEvent;
 import com.example.matheus.casadocodigocomlibs.infra.Infra;
 import com.example.matheus.casadocodigocomlibs.model.Livro;
+import com.example.matheus.casadocodigocomlibs.module.CasaDoCodigoComponent;
 import com.example.matheus.casadocodigocomlibs.server.WebClient;
 
 import org.greenrobot.eventbus.EventBus;
@@ -26,6 +28,8 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,17 +39,26 @@ import butterknife.ButterKnife;
  */
 public class ListaLivrosFragment extends Fragment implements Serializable {
 
-
     @BindView(R.id.lista_livros)
     RecyclerView listaLivros;
 
     private ArrayList<Livro> livros = new ArrayList<>();
     private LinearLayoutManager manager;
 
+    private WebClient webClient;
+
+    @Inject
+    public void setWebClient(WebClient webClient) {
+        this.webClient = webClient;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        CasaDoCodigoApplication app = (CasaDoCodigoApplication) getActivity().getApplication();
+        CasaDoCodigoComponent component = app.getComponent();
+        component.inject(this);
 
         if (savedInstanceState != null) {
             Toast.makeText(getContext(), "Reaproveitei", Toast.LENGTH_LONG).show();
@@ -53,18 +66,14 @@ public class ListaLivrosFragment extends Fragment implements Serializable {
         } else {
             Toast.makeText(getContext(), "Request novo", Toast.LENGTH_LONG).show();
 
-            new WebClient().retornaLivroDoServidor(0, 10);
+            webClient.retornaLivroDoServidor(0, 10);
         }
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.lista_livros_fragment, container, false);
         ButterKnife.bind(this, view);
-
 
         manager = new LinearLayoutManager(getContext());
 
@@ -72,7 +81,7 @@ public class ListaLivrosFragment extends Fragment implements Serializable {
             @Override
             public void carregaMaisItens() {
                 Snackbar.make(listaLivros, "Carregando mais itens", Snackbar.LENGTH_SHORT).show();
-                new WebClient().retornaLivroDoServidor(livros.size(), 10);
+                webClient.retornaLivroDoServidor(livros.size(), 10);
             }
         });
 
@@ -124,6 +133,5 @@ public class ListaLivrosFragment extends Fragment implements Serializable {
     public void onPause() {
         super.onPause();
         EventBus.getDefault().unregister(this);
-
     }
 }
