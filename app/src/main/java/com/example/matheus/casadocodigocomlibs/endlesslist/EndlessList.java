@@ -3,6 +3,7 @@ package com.example.matheus.casadocodigocomlibs.endlesslist;
 /**
  * Created by matheus on 04/07/16.
  */
+
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 

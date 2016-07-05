@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +39,6 @@ public class ListaLivrosFragment extends Fragment implements Serializable {
     RecyclerView listaLivros;
 
     private ArrayList<Livro> livros = new ArrayList<>();
-    private LinearLayoutManager manager;
 
 
     @Override
@@ -66,7 +64,8 @@ public class ListaLivrosFragment extends Fragment implements Serializable {
         ButterKnife.bind(this, view);
 
 
-        manager = new LinearLayoutManager(getContext());
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        listaLivros.setLayoutManager(manager);
 
         listaLivros.addOnScrollListener(new EndlessList(manager) {
             @Override
@@ -90,8 +89,6 @@ public class ListaLivrosFragment extends Fragment implements Serializable {
     public void recebeLista(ListaEvent event) {
 
         this.livros.addAll(event.livros);
-
-        Log.d("Quantidade", String.valueOf(livros.size()));
         listaLivros.getAdapter().notifyDataSetChanged();
     }
 
@@ -106,10 +103,8 @@ public class ListaLivrosFragment extends Fragment implements Serializable {
 
     private void carregaLista() {
 
-        // se não setar a listagem fica bugada, ainda não corrigiram isto
-        //  listaLivros.setAdapter(null);
 
-        listaLivros.setLayoutManager(manager);
+
         listaLivros.setAdapter(new ListaLivrosAdapter(livros));
     }
 
