@@ -1,13 +1,10 @@
 package com.example.matheus.casadocodigocomlibs.module;
 
-import com.example.matheus.casadocodigocomlibs.application.CasaDoCodigoApplication;
 import com.example.matheus.casadocodigocomlibs.converter.ItemServiceConverterFactory;
 import com.example.matheus.casadocodigocomlibs.converter.LivroServiceConverterFactory;
-import com.example.matheus.casadocodigocomlibs.fragments.ListaLivrosFragment;
 import com.example.matheus.casadocodigocomlibs.model.Carrinho;
 import com.example.matheus.casadocodigocomlibs.server.ItemService;
 import com.example.matheus.casadocodigocomlibs.server.ListaLivrosService;
-import com.example.matheus.casadocodigocomlibs.server.WebClient;
 
 import javax.inject.Singleton;
 

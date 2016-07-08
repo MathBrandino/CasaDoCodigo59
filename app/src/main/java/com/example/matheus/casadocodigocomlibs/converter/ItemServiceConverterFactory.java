@@ -23,7 +23,6 @@ public class ItemServiceConverterFactory extends Converter.Factory {
     public Converter<?, RequestBody> requestBodyConverter(Type type, Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {
 
 
-
         return new ItemServiceRequestConverter();
     }
 

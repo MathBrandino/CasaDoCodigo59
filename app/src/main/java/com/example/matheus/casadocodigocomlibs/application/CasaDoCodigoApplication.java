@@ -18,9 +18,9 @@ public class CasaDoCodigoApplication extends Application {
         super.onCreate();
 
         component = DaggerCasaDoCodigoComponent
-                        .builder()
-                        .casaDoCodigoModule(new CasaDoCodigoModule())
-                        .build();
+                .builder()
+                .casaDoCodigoModule(new CasaDoCodigoModule())
+                .build();
     }
 
     public CasaDoCodigoComponent getComponent() {

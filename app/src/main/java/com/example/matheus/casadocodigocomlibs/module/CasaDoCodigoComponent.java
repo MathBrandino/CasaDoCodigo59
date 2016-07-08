@@ -12,6 +12,8 @@ import dagger.Component;
 @Component(modules = CasaDoCodigoModule.class)
 public interface CasaDoCodigoComponent {
     void inject(ListaLivrosFragment fragment);
+
     void inject(DetalheLivroFragment fragment);
+
     void inject(CarrinhoActivity activity);
 }

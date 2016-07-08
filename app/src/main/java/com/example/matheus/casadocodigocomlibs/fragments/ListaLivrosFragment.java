@@ -114,7 +114,6 @@ public class ListaLivrosFragment extends Fragment implements Serializable {
     private void carregaLista() {
 
 
-
         listaLivros.setAdapter(new ListaLivrosAdapter(livros));
     }
 

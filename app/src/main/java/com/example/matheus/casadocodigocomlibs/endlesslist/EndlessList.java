@@ -9,12 +9,10 @@ import android.support.v7.widget.RecyclerView;
 
 public abstract class EndlessList extends RecyclerView.OnScrollListener {
 
+    int primeiroItemVisivel, quantidadeItensVisiveis, quantidadeTotalItens;
     private int totalAnterior = 0;
     private boolean carregando = true;
     private int itensVisiveisProntos = 1;
-    int primeiroItemVisivel, quantidadeItensVisiveis, quantidadeTotalItens;
-
-
     private LinearLayoutManager layoutManager;
 
     public EndlessList(LinearLayoutManager linearLayoutManager) {

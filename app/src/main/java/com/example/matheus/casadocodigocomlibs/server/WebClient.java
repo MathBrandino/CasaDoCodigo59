@@ -47,7 +47,6 @@ public class WebClient {
             public void onFailure(Call<List<Livro>> call, Throwable t) {
                 Log.d("Livros", "Deu ruim");
 
-                EventBus.getDefault().post(t);
             }
         });
     }

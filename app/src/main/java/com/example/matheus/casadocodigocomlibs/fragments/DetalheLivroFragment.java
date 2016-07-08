@@ -93,7 +93,6 @@ public class DetalheLivroFragment extends Fragment {
     }
 
 
-
     private void populaCamposCom(Livro livro) {
         nome.setText(livro.getNome());
         descricao.setText(livro.getDescricao());
