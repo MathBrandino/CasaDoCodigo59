@@ -15,14 +15,11 @@ public abstract class EndlessList extends RecyclerView.OnScrollListener {
     private int itensVisiveisProntos = 1;
     private LinearLayoutManager layoutManager;
 
-    public EndlessList(LinearLayoutManager linearLayoutManager) {
-        this.layoutManager = linearLayoutManager;
-    }
 
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
-
+        layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
         quantidadeItensVisiveis = recyclerView.getChildCount();
         quantidadeTotalItens = layoutManager.getItemCount();
         primeiroItemVisivel = layoutManager.findFirstVisibleItemPosition();

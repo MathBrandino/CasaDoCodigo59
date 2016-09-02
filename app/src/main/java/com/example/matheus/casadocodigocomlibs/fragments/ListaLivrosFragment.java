@@ -77,7 +77,7 @@ public class ListaLivrosFragment extends Fragment implements Serializable {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         listaLivros.setLayoutManager(manager);
 
-        listaLivros.addOnScrollListener(new EndlessList(manager) {
+        listaLivros.addOnScrollListener(new EndlessList() {
             @Override
             public void carregaMaisItens() {
                 Snackbar.make(listaLivros, "Carregando mais itens", Snackbar.LENGTH_SHORT).show();
