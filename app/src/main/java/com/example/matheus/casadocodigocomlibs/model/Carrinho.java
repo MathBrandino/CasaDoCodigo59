@@ -2,6 +2,7 @@ package com.example.matheus.casadocodigocomlibs.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -10,7 +11,6 @@ import java.util.List;
 public class Carrinho implements Serializable {
 
     private List<Item> items;
-
 
     public Carrinho() {
         items = new ArrayList<>();
@@ -30,7 +30,7 @@ public class Carrinho implements Serializable {
 
     public List<Item> pegaListaItens() {
 
-        return items;
+        return Collections.unmodifiableList(items);
     }
 }
 

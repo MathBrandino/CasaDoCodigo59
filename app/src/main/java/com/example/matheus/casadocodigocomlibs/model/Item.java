@@ -17,10 +17,6 @@ public class Item {
         return livro;
     }
 
-    public void setLivro(Livro livro) {
-        this.livro = livro;
-    }
-
     public TipoDeCompra getTipoDeCompra() {
         return tipoDeCompra;
     }
