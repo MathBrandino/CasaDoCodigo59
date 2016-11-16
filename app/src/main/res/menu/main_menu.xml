@@ -8,4 +8,9 @@
         android:title="Carrinho"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/desloga"
+        android:title="Deslogar"
+
+        />
 </menu>

@@ -3,8 +3,10 @@ package com.example.matheus.casadocodigocomlibs.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -18,6 +20,7 @@ import com.example.matheus.casadocodigocomlibs.fragments.ListaLivrosFragment;
 import com.example.matheus.casadocodigocomlibs.model.Autor;
 import com.example.matheus.casadocodigocomlibs.model.Livro;
 import com.example.matheus.casadocodigocomlibs.module.CasaDoCodigoComponent;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -35,14 +38,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-
         if (savedInstanceState == null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-            transaction.replace(R.id.main_frame, new ListaLivrosFragment());
-            transaction.commit();
+            trocaFragment(new ListaLivrosFragment());
 
         }
+    }
+
+    private void trocaFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        transaction.replace(R.id.main_frame, fragment);
+        transaction.commit();
     }
 
 
@@ -119,6 +125,12 @@ public class MainActivity extends AppCompatActivity {
             startActivity(vaiParaCarrinho);
         }
 
+        if (item.getItemId() == R.id.desloga) {
+            FirebaseAuth.getInstance().signOut();
+
+            finish();
+        }
+
 
         if (android.R.id.home == item.getItemId()) {
             onBackPressed();
@@ -140,4 +152,6 @@ public class MainActivity extends AppCompatActivity {
 
         EventBus.getDefault().unregister(this);
     }
+
+
 }

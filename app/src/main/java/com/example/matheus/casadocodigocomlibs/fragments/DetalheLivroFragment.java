@@ -107,6 +107,7 @@ public class DetalheLivroFragment extends Fragment {
 
         dataPublicacao.setText(livro.getDataPublicacao());
 
+
         Picasso.with(getContext()).load(livro.getImagemUrl()).placeholder(R.drawable.livro).fit().into(imagem);
     }
 

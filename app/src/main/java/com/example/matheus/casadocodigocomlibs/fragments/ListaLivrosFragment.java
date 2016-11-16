@@ -1,6 +1,7 @@
 package com.example.matheus.casadocodigocomlibs.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.matheus.casadocodigocomlibs.R;
 import com.example.matheus.casadocodigocomlibs.adapter.ListaLivrosAdapter;
+import com.example.matheus.casadocodigocomlibs.adapter.ListaLivrosUmItemAdapter;
 import com.example.matheus.casadocodigocomlibs.application.CasaDoCodigoApplication;
 import com.example.matheus.casadocodigocomlibs.endlesslist.EndlessList;
 import com.example.matheus.casadocodigocomlibs.event.ListaEvent;
@@ -21,6 +23,9 @@ import com.example.matheus.casadocodigocomlibs.infra.Infra;
 import com.example.matheus.casadocodigocomlibs.model.Livro;
 import com.example.matheus.casadocodigocomlibs.module.CasaDoCodigoComponent;
 import com.example.matheus.casadocodigocomlibs.server.WebClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -41,9 +46,13 @@ public class ListaLivrosFragment extends Fragment implements Serializable {
     @BindView(R.id.lista_livros)
     RecyclerView listaLivros;
 
+    @BindView(R.id.include)
+    View include;
+
     private ArrayList<Livro> livros = new ArrayList<>();
 
     private WebClient webClient;
+    private FirebaseRemoteConfig mFirebaseRemoteConfig;
 
     @Inject
     public void setWebClient(WebClient webClient) {
@@ -58,6 +67,8 @@ public class ListaLivrosFragment extends Fragment implements Serializable {
         CasaDoCodigoComponent component = app.getComponent();
         component.inject(this);
 
+        criaEConfiguraRemoteConfig();
+
         if (savedInstanceState != null) {
             Toast.makeText(getContext(), "Reaproveitei", Toast.LENGTH_LONG).show();
             livros = (ArrayList<Livro>) savedInstanceState.getSerializable("livros");
@@ -66,6 +77,25 @@ public class ListaLivrosFragment extends Fragment implements Serializable {
 
             webClient.retornaLivroDoServidor(0, 10);
         }
+
+
+    }
+
+    private void criaEConfiguraRemoteConfig() {
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+
+        mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+
+        mFirebaseRemoteConfig.fetch(15).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+
+                    mFirebaseRemoteConfig.activateFetched();
+                }
+
+            }
+        });
     }
 
     @Override
@@ -100,21 +130,36 @@ public class ListaLivrosFragment extends Fragment implements Serializable {
 
         this.livros.addAll(event.livros);
         listaLivros.getAdapter().notifyDataSetChanged();
+
+        removeInclude();
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
+        removeInclude();
 
         carregaLista();
         Infra.removeBotaoVoltar((AppCompatActivity) getActivity());
+
+    }
+
+    private void removeInclude() {
+        if (livros.size() > 0) {
+            include.setVisibility(View.GONE);
+        }
     }
 
     private void carregaLista() {
 
+        if (mFirebaseRemoteConfig.getBoolean("list_type_single_item")) {
+            listaLivros.setAdapter(new ListaLivrosUmItemAdapter(livros));
+        } else {
+            listaLivros.setAdapter(new ListaLivrosAdapter(livros));
 
-        listaLivros.setAdapter(new ListaLivrosAdapter(livros));
+        }
+
     }
 
     @Override

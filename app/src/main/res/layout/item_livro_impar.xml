@@ -6,7 +6,6 @@
     android:layout_height="170dp"
     android:layout_margin="10dp"
     android:orientation="vertical"
-    app:cardCornerRadius="15dp"
     app:cardElevation="7dp">
 
 
