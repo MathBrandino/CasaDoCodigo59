@@ -14,6 +14,7 @@ import com.example.matheus.casadocodigocomlibs.R;
 import com.example.matheus.casadocodigocomlibs.application.CasaDoCodigoApplication;
 import com.example.matheus.casadocodigocomlibs.event.AutorEvent;
 import com.example.matheus.casadocodigocomlibs.event.LivroEvent;
+import com.example.matheus.casadocodigocomlibs.event.SignOutEvent;
 import com.example.matheus.casadocodigocomlibs.fragments.AutorDetalheFragment;
 import com.example.matheus.casadocodigocomlibs.fragments.DetalheLivroFragment;
 import com.example.matheus.casadocodigocomlibs.fragments.ListaLivrosFragment;
@@ -21,6 +22,7 @@ import com.example.matheus.casadocodigocomlibs.model.Autor;
 import com.example.matheus.casadocodigocomlibs.model.Livro;
 import com.example.matheus.casadocodigocomlibs.module.CasaDoCodigoComponent;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -32,11 +34,34 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
 
+    private String TAG = "CasaDoCodigoAppMain";
+    private FirebaseAuth.AuthStateListener listener;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        listener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                if (user != null) {
+
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    firebaseAuth.removeAuthStateListener(this);
+                    EventBus.getDefault().post(new SignOutEvent());
+
+                }
+            }
+        };
+
+        FirebaseAuth.getInstance().addAuthStateListener(listener);
 
         if (savedInstanceState == null) {
             trocaFragment(new ListaLivrosFragment());
@@ -51,12 +76,10 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-
     @Subscribe
     public void lidaComClick(AutorEvent event) {
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
 
         AutorDetalheFragment autoresDetalhes = criaDetalheCom(event.autores);
         transaction.replace(R.id.main_frame, autoresDetalhes);
@@ -126,17 +149,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (item.getItemId() == R.id.desloga) {
+
             FirebaseAuth.getInstance().signOut();
-
-            finish();
+            return true;
         }
-
 
         if (android.R.id.home == item.getItemId()) {
             onBackPressed();
         }
 
         return true;
+    }
+
+    @Subscribe
+    public void signOut(SignOutEvent event) {
+        finish();
+        startActivity(new Intent(this, LoginActivity.class));
     }
 
 
@@ -149,9 +177,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
+        FirebaseAuth.getInstance().removeAuthStateListener(listener);
         EventBus.getDefault().unregister(this);
     }
-
 
 }

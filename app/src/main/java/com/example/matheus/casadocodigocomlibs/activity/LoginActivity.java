@@ -8,14 +8,17 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.matheus.casadocodigocomlibs.R;
+import com.example.matheus.casadocodigocomlibs.event.SignInEvent;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,11 +28,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "CasaDoCodigoApp";
     private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseAuth.AuthStateListener listener;
+    private boolean flagLogado = false;
 
     @BindView(R.id.login_email)
     EditText email;
-
     @BindView(R.id.login_senha)
     EditText senha;
 
@@ -40,38 +43,28 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        Log.i("CasaDoCodigoApp", "Entrei aqui----");
-
-
-        instanciaFirebaseAuth();
-
-        criaListenerParaFirebaseAuth();
-    }
-
-    private void instanciaFirebaseAuth() {
         firebaseAuth = FirebaseAuth.getInstance();
-    }
 
-    private void criaListenerParaFirebaseAuth() {
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
+        listener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
 
-                    vaiParaMain();
+                if (user != null && !flagLogado) {
+                    flagLogado = true;
+                    EventBus.getDefault().post(new SignInEvent());
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
-                // ...
             }
         };
+
+        firebaseAuth.addAuthStateListener(listener);
     }
 
-    private void vaiParaMain() {
+
+    @Subscribe
+    public void vaiParaMain(SignInEvent event) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
@@ -80,19 +73,27 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        firebaseAuth.addAuthStateListener(mAuthListener);
+
+        EventBus.getDefault().register(this);
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (mAuthListener != null) {
-            firebaseAuth.removeAuthStateListener(mAuthListener);
-            Log.i("CasaDoCodigoApp", "Remove listener");
-        }
+        Log.i("Ciclo", "OnStop Login");
+        EventBus.getDefault().unregister(this);
 
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        firebaseAuth.removeAuthStateListener(listener);
+
+
+    }
 
     @OnClick(R.id.login_logar)
     public void logar() {
