@@ -3,17 +3,20 @@ package com.example.matheus.casadocodigocomlibs.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 
 import com.example.matheus.casadocodigocomlibs.R;
 import com.example.matheus.casadocodigocomlibs.application.CasaDoCodigoApplication;
 import com.example.matheus.casadocodigocomlibs.event.AutorEvent;
 import com.example.matheus.casadocodigocomlibs.event.LivroEvent;
+import com.example.matheus.casadocodigocomlibs.event.NotificacaoEvent;
 import com.example.matheus.casadocodigocomlibs.event.SignOutEvent;
 import com.example.matheus.casadocodigocomlibs.fragments.AutorDetalheFragment;
 import com.example.matheus.casadocodigocomlibs.fragments.DetalheLivroFragment;
@@ -26,9 +29,11 @@ import com.google.firebase.auth.FirebaseUser;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
 
     private String TAG = "CasaDoCodigoAppMain";
     private FirebaseAuth.AuthStateListener listener;
+
+    @BindView(R.id.main_frame)
+    FrameLayout frameLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -181,4 +189,11 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void recebeNotificacao(NotificacaoEvent event){
+
+        Snackbar.make(frameLayout, "Recebeu uma notificação do servidor", Snackbar.LENGTH_SHORT).show();
+
+    }
 }

@@ -23,11 +23,13 @@ public class WebClient {
 
     private ListaLivrosService listaLivrosService;
     private ItemService itemService;
+    private DeviceService deviceService;
 
     @Inject
-    WebClient(ListaLivrosService listaLivrosService, ItemService itemService) {
+    WebClient(ListaLivrosService listaLivrosService, ItemService itemService, DeviceService deviceService) {
         this.listaLivrosService = listaLivrosService;
         this.itemService = itemService;
+        this.deviceService = deviceService;
     }
 
     public void retornaLivroDoServidor(int indice, int qtd) {
@@ -63,6 +65,23 @@ public class WebClient {
             @Override
             public void onFailure(Call<String> call, Throwable t) {
 
+            }
+        });
+    }
+
+    public void enviaDadosFirebaseParaServidor(String email, String id) {
+        Call<String> call = deviceService.mandaTokenParaServer(email, id);
+
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.i("CasaDoCodigoApp", "code : " + response.code());
+                Log.i("CasaDoCodigoApp", response.body());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.i("CasaDoCodigoApp", t.getMessage());
             }
         });
     }

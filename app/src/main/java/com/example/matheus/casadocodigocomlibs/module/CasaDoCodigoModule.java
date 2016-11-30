@@ -3,6 +3,7 @@ package com.example.matheus.casadocodigocomlibs.module;
 import com.example.matheus.casadocodigocomlibs.converter.ItemServiceConverterFactory;
 import com.example.matheus.casadocodigocomlibs.converter.LivroServiceConverterFactory;
 import com.example.matheus.casadocodigocomlibs.model.Carrinho;
+import com.example.matheus.casadocodigocomlibs.server.DeviceService;
 import com.example.matheus.casadocodigocomlibs.server.ItemService;
 import com.example.matheus.casadocodigocomlibs.server.ListaLivrosService;
 
@@ -11,6 +12,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class CasaDoCodigoModule {
@@ -31,6 +33,19 @@ public class CasaDoCodigoModule {
                 .build();
 
         ListaLivrosService service = client.create(ListaLivrosService.class);
+        return service;
+    }
+
+    @Provides
+    @Singleton
+    public DeviceService getDeviceService() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.83.120:8080")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        DeviceService service = retrofit.create(DeviceService.class);
+
         return service;
     }
 

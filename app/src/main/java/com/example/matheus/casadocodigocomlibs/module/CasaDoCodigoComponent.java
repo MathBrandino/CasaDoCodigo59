@@ -1,6 +1,8 @@
 package com.example.matheus.casadocodigocomlibs.module;
 
 import com.example.matheus.casadocodigocomlibs.activity.CarrinhoActivity;
+import com.example.matheus.casadocodigocomlibs.activity.LoginActivity;
+import com.example.matheus.casadocodigocomlibs.activity.NovoUserActivity;
 import com.example.matheus.casadocodigocomlibs.fragments.DetalheLivroFragment;
 import com.example.matheus.casadocodigocomlibs.fragments.ListaLivrosFragment;
 
@@ -16,4 +18,6 @@ public interface CasaDoCodigoComponent {
     void inject(DetalheLivroFragment fragment);
 
     void inject(CarrinhoActivity activity);
+
+    void inject(NovoUserActivity activity);
 }

@@ -22,6 +22,7 @@ import com.example.matheus.casadocodigocomlibs.model.Carrinho;
 import com.example.matheus.casadocodigocomlibs.model.Item;
 import com.example.matheus.casadocodigocomlibs.module.CasaDoCodigoComponent;
 import com.example.matheus.casadocodigocomlibs.server.WebClient;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -132,9 +133,10 @@ public class CarrinhoActivity extends AppCompatActivity {
         final TextInputLayout layout = new TextInputLayout(this);
         final EditText editText = new EditText(this);
         editText.setHint("Email");
+        editText.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         layout.addView(editText);
 
-        new AlertDialog.Builder(this).setView(layout).setPositiveButton("Pronto", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(this).setView(layout).setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String json = new LivroConverter().toJson(carrinho.pegaListaItens(), editText.getText().toString());

@@ -1,5 +1,6 @@
 package com.example.matheus.casadocodigocomlibs.activity;
 
+import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +11,10 @@ import android.util.Log;
 import android.widget.EditText;
 
 import com.example.matheus.casadocodigocomlibs.R;
+import com.example.matheus.casadocodigocomlibs.application.CasaDoCodigoApplication;
 import com.example.matheus.casadocodigocomlibs.event.SignInEvent;
+import com.example.matheus.casadocodigocomlibs.module.CasaDoCodigoComponent;
+import com.example.matheus.casadocodigocomlibs.server.WebClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -20,9 +24,12 @@ import com.google.firebase.auth.FirebaseUser;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import dagger.Component;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -35,6 +42,9 @@ public class LoginActivity extends AppCompatActivity {
     EditText email;
     @BindView(R.id.login_senha)
     EditText senha;
+
+    private WebClient client;
+
 
 
     @Override
