@@ -13,4 +13,10 @@
         android:title="Deslogar"
 
         />
+
+    <item
+        android:id="@+id/cartao"
+        android:icon="@drawable/card"
+        android:title="Cartões"
+        app:showAsAction="always" />
 </menu>

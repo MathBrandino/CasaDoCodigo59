@@ -1,9 +1,10 @@
 package com.example.matheus.casadocodigocomlibs.module;
 
 import com.example.matheus.casadocodigocomlibs.activity.CarrinhoActivity;
-import com.example.matheus.casadocodigocomlibs.activity.LoginActivity;
 import com.example.matheus.casadocodigocomlibs.activity.NovoUserActivity;
 import com.example.matheus.casadocodigocomlibs.fragments.DetalheLivroFragment;
+import com.example.matheus.casadocodigocomlibs.fragments.FormularioCartaoFragment;
+import com.example.matheus.casadocodigocomlibs.fragments.ListaCartoesFragment;
 import com.example.matheus.casadocodigocomlibs.fragments.ListaLivrosFragment;
 
 import javax.inject.Singleton;
@@ -20,4 +21,8 @@ public interface CasaDoCodigoComponent {
     void inject(CarrinhoActivity activity);
 
     void inject(NovoUserActivity activity);
+
+    void inject(ListaCartoesFragment listaCartoesFragment);
+
+    void inject(FormularioCartaoFragment formularioCartaoFragment);
 }

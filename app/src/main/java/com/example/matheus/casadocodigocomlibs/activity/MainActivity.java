@@ -166,6 +166,10 @@ public class MainActivity extends AppCompatActivity {
             onBackPressed();
         }
 
+        if (item.getItemId() == R.id.cartao) {
+            startActivity(new Intent(this, CartaoActivity.class));
+        }
+
         return true;
     }
 

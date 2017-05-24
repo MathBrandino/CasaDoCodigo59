@@ -1,9 +1,10 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         applicationId "com.example.matheus.casadocodigocomlibs"
@@ -54,6 +55,7 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.5'
     compile 'com.google.firebase:firebase-messaging:9.0.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'org.greenrobot:greendao:3.2.2'
 }
 
 apply plugin: 'com.google.gms.google-services'
