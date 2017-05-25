@@ -1,6 +1,7 @@
 package com.example.matheus.casadocodigocomlibs.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -84,15 +85,7 @@ public class CartaoActivity extends AppCompatActivity {
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        FormularioCartaoFragment formulario = new FormularioCartaoFragment();
-
-        Cartao cartao = event.cartao;
-
-        Bundle arguments = new Bundle();
-
-        arguments.putSerializable("cartao", cartao);
-
-        formulario.setArguments(arguments);
+        FormularioCartaoFragment formulario = getFormularioCartaoFragment(event.cartao);
 
         transaction.replace(R.id.cartao_frame, formulario);
 
@@ -100,5 +93,18 @@ public class CartaoActivity extends AppCompatActivity {
         transaction.commit();
 
 
+    }
+
+
+    @NonNull
+    private FormularioCartaoFragment getFormularioCartaoFragment(Cartao cartao) {
+        FormularioCartaoFragment formulario = new FormularioCartaoFragment();
+
+        Bundle arguments = new Bundle();
+
+        arguments.putSerializable("cartao", cartao);
+
+        formulario.setArguments(arguments);
+        return formulario;
     }
 }

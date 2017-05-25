@@ -1,8 +1,10 @@
 package com.example.matheus.casadocodigocomlibs.fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,11 +15,13 @@ import android.view.ViewGroup;
 import com.example.matheus.casadocodigocomlibs.R;
 import com.example.matheus.casadocodigocomlibs.adapter.CartaoAdapter;
 import com.example.matheus.casadocodigocomlibs.application.CasaDoCodigoApplication;
+import com.example.matheus.casadocodigocomlibs.event.CartaoParaDeletarEvent;
 import com.example.matheus.casadocodigocomlibs.event.NovoCartaoEvent;
 import com.example.matheus.casadocodigocomlibs.model.Cartao;
 import com.example.matheus.casadocodigocomlibs.model.CartaoDao;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -39,6 +43,9 @@ public class ListaCartoesFragment extends Fragment {
 
     @BindView(R.id.lista_cartoes)
     RecyclerView lista;
+    List<Cartao> cartoes;
+
+    CartaoAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,11 +58,11 @@ public class ListaCartoesFragment extends Fragment {
     public void onResume() {
         super.onResume();
         colocaNomeNaActionBar();
-        List<Cartao> cartoes = dao.loadAll();
 
+        cartoes = dao.loadAll();
+        adapter = new CartaoAdapter(cartoes);
         lista.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        CartaoAdapter adapter = new CartaoAdapter(cartoes);
         lista.setAdapter(adapter);
 
     }
@@ -75,10 +82,41 @@ public class ListaCartoesFragment extends Fragment {
 
     }
 
+
+    @Subscribe
+    public void recebeCartaoParaDeletar(final CartaoParaDeletarEvent event) {
+
+        new AlertDialog.Builder(getContext()).setMessage("Deseja mesmo deletar o cartão ?")
+                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        cartoes.remove(event.cartao);
+                        dao.delete(event.cartao);
+                        adapter.notifyItemRemoved(event.position);
+                    }
+                })
+                .setNegativeButton("Não", null)
+                .show();
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
     @OnClick(R.id.btn_add_cartao)
     public void addNovoCartao() {
 
         EventBus.getDefault().post(new NovoCartaoEvent());
 
     }
+
 }

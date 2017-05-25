@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.matheus.casadocodigocomlibs.R;
+import com.example.matheus.casadocodigocomlibs.event.CartaoParaDeletarEvent;
 import com.example.matheus.casadocodigocomlibs.event.CartaoParaEdicaoEvent;
 import com.example.matheus.casadocodigocomlibs.model.Cartao;
 
@@ -17,6 +18,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 
 /**
  * Created by matheusbrandino on 5/24/17.
@@ -76,12 +78,26 @@ public class CartaoAdapter extends RecyclerView.Adapter {
         @OnClick(R.id.cartao_item)
         public void seleciona() {
 
-            int position = getAdapterPosition();
-            Cartao cartao = cartoes.get(position);
+            Cartao cartao = getCartao();
 
             EventBus.getDefault().post(new CartaoParaEdicaoEvent(cartao));
 
+        }
 
+        @OnLongClick(R.id.cartao_item)
+        public boolean clickLongo() {
+
+            Cartao cartao = getCartao();
+
+            EventBus.getDefault().post(new CartaoParaDeletarEvent(cartao, getAdapterPosition()));
+
+
+            return true;
+        }
+
+        private Cartao getCartao() {
+            int position = getAdapterPosition();
+            return cartoes.get(position);
         }
     }
 
